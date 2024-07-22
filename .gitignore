@@ -9,6 +9,7 @@ __pycache__/
 .vscode
 .vs
 x64
+myapp/make/myapp
 
 # Distribution / packaging
 .Python

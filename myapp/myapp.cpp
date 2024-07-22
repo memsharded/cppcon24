@@ -1,6 +1,7 @@
 #include <openssl/sha.h>
 #include <iostream>
 #include <string>
+#include <cstring>
 
 int main(){
     unsigned char sha256_digest[SHA256_DIGEST_LENGTH];
