@@ -20,4 +20,4 @@ def run(cmd):
 # Visual Studio
 run("conan install --requires=openssl/[*] -of=myapp/visual/build -g MSBuildDeps -g MSBuildToolchain")
 run(r".\myapp\visual\build\conanbuild.bat && msbuild myapp/visual/myapp.sln /p:Configuration=Release /p:Platform=x64")
-run(r".\myapp\visual\build\myapp.exe")
+run(r".\myapp\visual\x64\Release\myapp.exe")
