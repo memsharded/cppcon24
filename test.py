@@ -6,7 +6,13 @@ def run(cmd):
         raise Exception(f"Command failed {cmd}")
 
 # CMake
-run("conan install myapp -of=myapp/cmake/build -g CMakeToolchain -g CMakeDeps")
+run("conan install --requires=openssl/[*] -of=myapp/cmake/build -g CMakeToolchain -g CMakeDeps")
 run("cmake -S myapp/cmake -B myapp/cmake/build -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake")
 run("cmake --build myapp/cmake/build --config Release")
 run(r".\myapp\cmake\build\Release\myapp.exe")
+
+# Meson
+run("conan install --requires=openssl/[*] --tool-requires=pkgconf/[*] -of=myapp/meson/build -g MesonToolchain -g PkgConfigDeps")
+run(r".\myapp\meson\build\conanbuild.bat && meson setup --native-file=myapp/meson/build/conan_meson_native.ini myapp/meson/build myapp/meson")
+run(r".\myapp\meson\build\conanbuild.bat && meson compile -C myapp/meson/build")
+run(r".\myapp\meson\build\myapp.exe")
