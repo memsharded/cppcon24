@@ -111,12 +111,13 @@ class ZlibConan(ConanFile):
                         "includes": [
                             "@prefix@/include"
                         ],
-                        "location": "@prefix@/lib/zlib.lib"
+                        "location": "@prefix@/lib/%s"
                     }
                 }
             }
             """)
-        save(self, os.path.join(self.package_folder, "zlib.cps"), cps)
+        libname = "zlib.lib" if self.settings.os == "Windows" else "libz.a"
+        save(self, os.path.join(self.package_folder, "zlib.cps"), cps % libname)
 
     def package_info(self):
         from conan.cps.cps import CPS

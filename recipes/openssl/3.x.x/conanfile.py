@@ -616,7 +616,59 @@ class OpenSSLConan(ConanFile):
                 }
             }
             """)
-        save(self, os.path.join(self.package_folder, "openssl.cps"), cps)
+        cps_linux = textwrap.dedent("""\
+            {
+                "cps_version": "0.12.0",
+                "name": "openssl",
+                "version": "3.2.2",
+                "license": "Apache-2.0",
+                "description": "A toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols",
+                "website": "https://github.com/openssl/openssl",
+                "requires": {
+                    "zlib": null
+                },
+                "configurations": [
+                    "release"
+                ],
+                "default_components": [
+                    "crypto",
+                    "ssl"
+                ],
+                "components": {
+                    "crypto": {
+                        "type": "archive",
+                        "requires": [
+                            "zlib::zlib"
+                        ],
+                        "includes": [
+                            "@prefix@/include"
+                        ],
+                        "location": "@prefix@/lib/libcrypto.a",
+                        "link_libraries": [
+                            "dl",
+                            "rt",
+                            "pthread"
+                        ]
+                    },
+                    "ssl": {
+                        "type": "archive",
+                        "requires": [
+                            ":crypto"
+                        ],
+                        "includes": [
+                            "@prefix@/include"
+                        ],
+                        "location": "@prefix@/lib/libssl.a",
+                        "link_libraries": [
+                            "dl",
+                            "pthread"
+                        ]
+                    }
+                }
+            }
+            """)
+        content = cps if self.settings.os == "Windows" else cps_linux
+        save(self, os.path.join(self.package_folder, "openssl.cps"), content)
 
     def _create_cmake_module_variables(self, module_file):
         content = textwrap.dedent("""\
