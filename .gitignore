@@ -10,6 +10,7 @@ __pycache__/
 .vs
 x64
 myapp/make/myapp
+CMakeUserPresets.json
 
 # Distribution / packaging
 .Python
