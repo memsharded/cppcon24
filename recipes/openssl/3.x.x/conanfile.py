@@ -589,7 +589,7 @@ class OpenSSLConan(ConanFile):
                     "crypto": {
                         "type": "archive",
                         "requires": [
-                            "zlib::zlib"
+                            "zlib:zlib"
                         ],
                         "includes": [
                             "@prefix@/include"
@@ -638,7 +638,7 @@ class OpenSSLConan(ConanFile):
                     "crypto": {
                         "type": "archive",
                         "requires": [
-                            "zlib::zlib"
+                            "zlib:zlib"
                         ],
                         "includes": [
                             "@prefix@/include"
