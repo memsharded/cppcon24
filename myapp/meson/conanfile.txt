@@ -1,0 +1,9 @@
+[requires]
+openssl/3.2.2
+
+[tool_requires]
+pkgconf/[*]
+
+[generators]
+MesonToolchain
+PkgConfigDeps

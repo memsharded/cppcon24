@@ -26,8 +26,8 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <ImportGroup Label="PropertySheets">
-      <Import Project="build\conantoolchain.props" />
-      <Import Project="build\conandeps.props" />
+      <Import Project="conan\conantoolchain.props" />
+      <Import Project="conan\conandeps.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>

@@ -1,0 +1,9 @@
+[requires]
+openssl/3.2.2
+
+[generators]
+MSBuildToolchain
+MSBuildDeps
+
+[layout]
+vs_layout
