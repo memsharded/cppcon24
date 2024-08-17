@@ -33,6 +33,7 @@ if platform.system() == "Windows":
     run(r".\x64\Release\myapp.exe")
 else:
     # Makefiles (only Linux)
-    run("conan install --requires=openssl/[*] -of=myapp/make/build -g GnuToolchain -g MakeDeps")
-    run(r"cd myapp/make && make")
-    run(r"myapp/make/myapp")
+    os.chdir("myapp/make")
+    run("conan install .")
+    run("make")
+    run("myapp")
