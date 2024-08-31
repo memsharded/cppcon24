@@ -1,0 +1,24 @@
+BASE FILE {
+  "components" :
+  {
+    "zlib" :
+    {
+      "type" : "archive"
+    }
+  },
+  "cps_path" : "@prefix@/cps",
+  "cps_version" : "0.12.0",
+  "name" : "zlib"
+}
+CONF FILE release {
+  "components": {
+    "zlib": {
+      "link_languages": [
+        "c"
+      ],
+      "location": "@prefix@/lib/zlib.lib"
+    }
+  },
+  "configuration": "Release",
+  "name": "zlib"
+}

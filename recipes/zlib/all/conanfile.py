@@ -94,33 +94,9 @@ class ZlibConan(ConanFile):
         save(self, os.path.join(self.package_folder, "licenses", "LICENSE"), self._extract_license())
         cmake = CMake(self)
         cmake.install()
-        cps = textwrap.dedent("""\
-            {
-                "cps_version": "0.12.0",
-                "name": "zlib",
-                "version": "1.3.1",
-                "configurations": [
-                    "release"
-                ],
-                "default_components": [
-                    "zlib"
-                ],
-                "components": {
-                    "zlib": {
-                        "type": "archive",
-                        "includes": [
-                            "@prefix@/include"
-                        ],
-                        "location": "@prefix@/lib/%s"
-                    }
-                }
-            }
-            """)
-        libname = "zlib.lib" if self.settings.os == "Windows" else "libz.a"
-        save(self, os.path.join(self.package_folder, "zlib.cps"), cps % libname)
 
     def package_info(self):
         from conan.cps.cps import CPS
-        self.cpp_info = CPS.load("zlib.cps").to_conan()
+        self.cpp_info = CPS.load("cps/zlib.cps").to_conan()
         self.cpp_info.set_property("cmake_file_name", "ZLIB")
         self.cpp_info.set_property("cmake_target_name", "ZLIB::ZLIB")

@@ -1,0 +1,34 @@
+diff --git a/src/CMakeLists0.txt b/src/CMakeLists.txt
+index 2f08574..0a81f6b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,6 +5,8 @@ project(zlib C)
+
+ set(VERSION "1.3.1")
+
++set(CMAKE_EXPERIMENTAL_EXPORT_PACKAGE_INFO "b80be207-778e-46ba-8080-b23bba22639e")
++
+ option(ZLIB_BUILD_EXAMPLES "Enable Zlib Examples" ON)
+
+ set(INSTALL_BIN_DIR "${CMAKE_INSTALL_PREFIX}/bin" CACHE PATH "Installation directory for executables")
+@@ -186,10 +188,10 @@ endif()
+
+
+ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL )
+-    install(TARGETS zlib
++    install(TARGETS zlib EXPORT zlib
+         RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
+         ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
+-        LIBRARY DESTINATION "${INSTALL_LIB_DIR}" )
++        LIBRARY DESTINATION "${INSTALL_LIB_DIR}")
+ endif()
+ if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL )
+     install(FILES ${ZLIB_PUBLIC_HDRS} DESTINATION "${INSTALL_INC_DIR}")
+@@ -200,6 +202,7 @@ endif()
+ if(NOT SKIP_INSTALL_FILES AND NOT SKIP_INSTALL_ALL )
+     install(FILES ${ZLIB_PC} DESTINATION "${INSTALL_PKGCONFIG_DIR}")
+ endif()
++install(PACKAGE_INFO zlib EXPORT zlib)
+
+ #============================================================================
+ # Example binaries
