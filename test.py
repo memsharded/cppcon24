@@ -36,4 +36,4 @@ else:
     os.chdir("myapp/make")
     run("conan install .")
     run("make")
-    run("myapp")
+    run("./myapp")
