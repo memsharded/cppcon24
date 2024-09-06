@@ -3,4 +3,4 @@ openssl/3.2.2
 
 [generators]
 GnuToolchain
-MakeDeps
+AutotoolsDeps

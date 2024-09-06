@@ -1,11 +1,2 @@
-include build/conandeps.mk
-CXXFLAGS            += $(CONAN_CXXFLAGS)
-CPPFLAGS            += $(addprefix -I, $(CONAN_INCLUDE_DIRS))
-CPPFLAGS            += $(addprefix -D, $(CONAN_DEFINES))
-LDFLAGS             += $(addprefix -L, $(CONAN_LIB_DIRS))
-LDLIBS              += $(addprefix -l, $(CONAN_LIBS))
-LDLIBS              += $(addprefix -l, $(CONAN_SYSTEM_LIBS))
-EXELINKFLAGS        += $(CONAN_EXELINKFLAGS)
-
 all:
-	$(CXX) ../myapp.cpp $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(EXELINKFLAGS) -o myapp
+	$(CXX) ../myapp.cpp $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(EXELINKFLAGS) $(LIBS) -o myapp

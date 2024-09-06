@@ -36,5 +36,5 @@ else:
     os.chdir("myapp/make")
     # Use ping "$(hostname).local" for remote WSL and add "conan remote add" for server in host
     run("conan install .")
-    run("make")
+    run(". conanbuild.sh && make")
     run("./myapp")
