@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
     // Video by Olia Danilevich from https://www.pexels.com/
     //std::string video_file = "assets/dancing.mp4";
      //Open the default video camera
-    cv::VideoCapture video(0);
+    cv::VideoCapture video(1);
 
     // if not success, exit program
     if (video.isOpened() == false)  {
