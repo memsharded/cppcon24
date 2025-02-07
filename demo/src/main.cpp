@@ -59,6 +59,53 @@ void draw_keypoints(cv::Mat &resized_image, float *output)
     }
 }
 
+float scale = 100;
+
+class Ball{
+    public:
+        float x=0.0f;
+        float y=0.0f;
+        float vx = 3.0f;
+        float vy= 0.0f;
+        float rad =0.4;
+        float acc = 40;
+        int r = 0;
+        int g = 0;
+        int b = 255;
+        Ball(){
+            if(rand() % 2)
+                x = 4;
+            r = rand() % 255;
+            g = rand() % 255;
+            b = rand() % 255;
+        }
+        void move(float t){
+            x += vx * t;
+            y += vy * t + acc * t *t;
+            vy += acc * t;
+        }
+        void limits(){
+            if (y > 5){
+                y = 5; 
+                vy = -vy;
+            }
+            if (y < 0){
+                y = 0; 
+                vy = -vy + 0.5;
+            }
+            if (x > 6.5){
+                x = 6.5;
+                vx = -vx;
+            }
+            if (x < 0){
+                x = 0;
+                vx = -vx;
+            }
+        }
+        void draw(cv::Mat& frame){
+            cv::circle(frame, cv::Point(x * scale, y * scale), rad * scale, cv::Scalar(r, g, b), -1);
+        }
+};
 int main(int argc, char *argv[]) {
 
     // model from https://tfhub.dev/google/lite-model/movenet/singlepose/lightning/tflite/float16/4
@@ -72,7 +119,7 @@ int main(int argc, char *argv[]) {
     // Video by Olia Danilevich from https://www.pexels.com/
     //std::string video_file = "assets/dancing.mp4";
      //Open the default video camera
-    cv::VideoCapture video(1);
+    cv::VideoCapture video(0);
 
     // if not success, exit program
     if (video.isOpened() == false)  {
@@ -167,6 +214,14 @@ int main(int argc, char *argv[]) {
         frame = cv::imread(image_file);
     }
 
+    std::vector<Ball> balls;
+    balls.push_back(Ball());
+    Ball b;
+    b.x = 3;
+    balls.push_back(b);
+    float hand_rad = 0.15;
+    int points = 0;
+
     while (true) {
 
         if (image_file.empty()) {
@@ -206,7 +261,68 @@ int main(int argc, char *argv[]) {
 
         float *results = interpreter->typed_output_tensor<float>(0);
 
+        // move ball
+        float t = processing_time * 2/ 1000.0;
+        for(auto& b: balls)
+            b.move(t);
+        int offset = 75;
+        for (int index1=0; index1<17; index1++){
+            float y1 = results[index1 * 3];
+            float x1 = results[index1 * 3 + 1];
+            float conf1 = results[index1 * 3 + 2];
+            if (conf1 > confidence_threshold) {
+                int img_x1 = offset+static_cast<int>(x1 * square_dim);
+                int img_y1 = static_cast<int>(y1 * square_dim);
+                if (index1 == 0 || index1 == 9 || index1 == 10){
+                    cv::circle(frame, cv::Point(img_x1, img_y1), hand_rad * scale, cv::Scalar(255, 255, 0), -1);
+                    float real_x = img_x1/scale;
+                    float real_y = img_y1/scale;
+                    std::vector<Ball> new_balls;
+                    for(auto& b: balls){
+                        if ((real_x - b.x) * (real_x - b.x) + (real_y - b.y) * (real_y - b.y) < 
+                        (b.rad + hand_rad) * (b.rad + hand_rad)) {
+                            if (index1 == 0)
+                                points = 0;
+                            else {
+                                if (b.rad > 0.2){
+                                    points += 10;
+                                    Ball newb;
+                                    newb.r = b.r; newb.g = b.g; newb.b= b.b;
+                                    newb.y = b.y;
+                                    newb.x = b.x - b.rad/2;
+                                    newb.vx = -3;
+                                    newb.vy = 5;
+                                    newb.rad = b.rad / 2;
+                                    new_balls.push_back(newb);
+                                    Ball newb2;
+                                    newb2.r = b.r; newb2.g = b.g; newb2.b= b.b;
+                                    newb2.y = b.y;
+                                    newb2.x = b.x + b.rad/2;
+                                    newb2.vx = 3;
+                                    newb2.vy = 5;
+                                    newb2.rad = b.rad / 2;
+                                    new_balls.push_back(newb2);
+                                }
+                            }
+                        }
+                        else
+                            new_balls.push_back(b);
+                    }
+                    balls = new_balls;
+                    if (balls.size() < 2){
+                        balls.push_back(Ball());
+                    } 
+                }
+            }
+        }
+        for(auto& b: balls)
+            b.limits();
+        
+        cv::putText(frame, std::string("POINTS:") + std::to_string(points), cv::Point(20, 45), cv::FONT_HERSHEY_SIMPLEX, 2,
+                    cv::Scalar(0,0, 255), 3, cv::LINE_AA);
         draw_keypoints(frame, results);
+        for(auto& b: balls)
+            b.draw(frame);
 
         if (show_windows) {
             imshow("Output", frame);
@@ -218,7 +334,8 @@ int main(int argc, char *argv[]) {
 
         // render at 30 fps
         int waitTime = processing_time<33 ? 33-processing_time : 1;
-        if (cv::waitKey(33-processing_time) >= 0) {
+        int k = cv::waitKey(33-processing_time);
+        if (k >= 0) {
             break;
         }
     }

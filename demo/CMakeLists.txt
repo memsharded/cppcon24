@@ -6,4 +6,5 @@ find_package(OpenCV REQUIRED)
 
 add_executable(pose-estimation src/main.cpp)
 
-target_link_libraries(pose-estimation PRIVATE tensorflow::tensorflowlite opencv::opencv)
+target_link_libraries(pose-estimation PRIVATE tensorflow::tensorflowlite 
+                                              opencv::opencv)
